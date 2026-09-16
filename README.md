@@ -79,3 +79,7 @@ laws.sg 自述并非官方发布者，而是对 Singapore Statutes Online（立�
 如遇到使用问题，请关注微信公众号「**隔壁王律师**」寻求帮助：
 
 ![微信公众号「隔壁王律师」二维码](docs/wechat-qr.jpg)
+
+## License
+
+[GPL-3.0](LICENSE)
