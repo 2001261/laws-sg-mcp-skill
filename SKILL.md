@@ -1,7 +1,7 @@
 ---
 name: laws-sg-mcp
 slug: laws-sg-mcp
-version: 1.0.2
+version: 1.0.3
 displayName: laws.sg MCP工具接入助手
 description: 配置 laws.sg（新加坡法律法规与判例库）官方 MCP 服务——自动登录或注册账号、签发个人 bearer token、探测并写入本机 MCP 客户端配置、做真握手验证；自动路径失败时降级为浏览器引导
 type: prompt
@@ -186,3 +186,12 @@ laws.sg 自述：它不是官方发布者，而是对 Singapore Statutes Online�
 eLitigation（判决）公开文本的免费再呈现；不提供法律意见；语料不完整时工具会报「不在库里」，
 那只代表「这里没有」而**不代表该法规不存在**；生效日期与修法历史依赖前请核对
 Singapore Statutes Online。每个工具响应都自带 disclaimer，转述给用户时应保留这层意思。
+
+---
+
+## 作者与支持
+
+**王晶晶律师 · 四川恒和信律师事务所**
+
+如遇到使用问题，或想获取更多法律 AI 工具与使用技巧，
+请关注微信公众号「**隔壁王律师**」，后台留言即可获得帮助。
