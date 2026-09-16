@@ -19,7 +19,7 @@
 
 ```
 SKILL.md                    # Skill 主入口：判断树 + 全/半自动两条路径
-scripts/laws_sg_mcp.sh      # 配置引擎（仅依赖 bash / curl / python3）
+scripts/laws_sg_mcp.py      # 配置引擎（单文件纯 Python，仅依赖 Python 3 标准库；Windows 用 python 替代 python3）
 references/
   api.md                    # laws.sg 认证与 token 接口的实测文档
   clients.md                # 各客户端配置文件位置与字段说明
@@ -35,13 +35,13 @@ references/
 ```bash
 # 全自动：doctor → 登录/注册 → 签发 → 写配置 → 验证
 LAWS_SG_EMAIL=you@example.com LAWS_SG_PASSWORD=... \
-  scripts/laws_sg_mcp.sh setup
+  python3 scripts/laws_sg_mcp.py setup
 
 # 或者分步 / 半自动
-scripts/laws_sg_mcp.sh manual --open     # 浏览器引导创建 token
-scripts/laws_sg_mcp.sh clients           # 探测本机装了哪些 MCP 客户端
-scripts/laws_sg_mcp.sh verify            # 真握手验证
-scripts/laws_sg_mcp.sh --help            # 完整命令列表
+python3 scripts/laws_sg_mcp.py manual --open     # 浏览器引导创建 token
+python3 scripts/laws_sg_mcp.py clients           # 探测本机装了哪些 MCP 客户端
+python3 scripts/laws_sg_mcp.py verify            # 真握手验证
+python3 scripts/laws_sg_mcp.py --help            # 完整命令列表
 ```
 
 跑完后**重启你的 agent**——大多数 agent 只在会话启动时加载 MCP 配置。
@@ -71,3 +71,7 @@ scripts/laws_sg_mcp.sh --help            # 完整命令列表
 ## 免责
 
 laws.sg 自述并非官方发布者，而是对 Singapore Statutes Online（立法）与 eLitigation（判决）公开文本的免费再呈现，不提供法律意见；工具报「不在库里」不代表该法规不存在，关键事项请核对官方来源。
+
+## 作者
+
+**2001261** —— 更多开源项目见 <https://github.com/2001261>

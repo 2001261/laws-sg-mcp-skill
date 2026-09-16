@@ -94,10 +94,10 @@
    默认配置用的是环境变量引用，写进 `~/.zshrc` 后必须 `source` 或开新 shell，
    并且要**从那个 shell 启动 agent**。GUI 方式启动的 agent 可能读不到 shell profile，
    这种情况改用 `configure --token-inline`（明文落盘）或该客户端自己的密钥输入机制。
-3. **写的是哪一级配置？** 项目级通常覆盖用户级。用 `scripts/laws_sg_mcp.sh clients`
+3. **写的是哪一级配置？** 项目级通常覆盖用户级。用 `python3 scripts/laws_sg_mcp.py clients`
    看每个客户端实际用的路径，用 `configure --scope user|project` 控制。
 4. **条目被禁用了吗？** 脚本会强制 `enabled: true`，但你可能事后手改过。
-5. **token 本身有效吗？** `scripts/laws_sg_mcp.sh verify` 是最快的判据 ——
+5. **token 本身有效吗？** `python3 scripts/laws_sg_mcp.py verify` 是最快的判据 ——
    它能握手成功就说明 token 和端点都没问题，故障在客户端侧。
 6. **不受信任的工作目录**：部分 agent（含 kimi-code）在 untrusted 目录里不加载项目级 MCP server，
    需要先在 workspace trust 提示里确认。
@@ -147,10 +147,10 @@ curl -s -X POST https://laws.sg/api/mcp \
 2. 把 token 交给脚本，剩下的验证、写 profile、写 mcp.json 全自动：
 
 ```bash
-scripts/laws_sg_mcp.sh verify   laws_sg_xxxx
-scripts/laws_sg_mcp.sh env-install --token laws_sg_xxxx
-scripts/laws_sg_mcp.sh configure            # 默认 --client auto，探测本机装了哪些客户端
-scripts/laws_sg_mcp.sh clients              # 复核：每个客户端的配置路径与是否已配置
+python3 scripts/laws_sg_mcp.py verify   laws_sg_xxxx
+python3 scripts/laws_sg_mcp.py env-install --token laws_sg_xxxx
+python3 scripts/laws_sg_mcp.py configure            # 默认 --client auto，探测本机装了哪些客户端
+python3 scripts/laws_sg_mcp.py clients              # 复核：每个客户端的配置路径与是否已配置
 ```
 
 然后重启你的 agent，用它自己的方式确认 `laws-sg` 已连接（kimi-code 用 `/mcp`）。
@@ -165,6 +165,8 @@ scripts/laws_sg_mcp.sh clients              # 复核：每个客户端的配置�
   绝不无脑新建。
 - 密码默认**不持久化**，也不回显、不入日志。只有显式传 `--save-credentials` 才会把
   `LAWS_SG_EMAIL` / `LAWS_SG_PASSWORD` 明文写进 shell profile，脚本会当场警告。
-- 会话 cookie jar 存在 `~/.config/laws-sg/cookies.txt`（0600）。它等价于「已登录」，
-  用完可删；`setup` 流程结束不需要保留。
+- 会话 cookie jar 存在 `~/.config/laws-sg/cookies.txt`（0600；Windows 为 `%APPDATA%\laws-sg\cookies.txt`）。
+  它等价于「已登录」，用完可删；`setup` 流程结束不需要保留。
 - 写 `mcp.json` 与 shell profile 前都会备份（`*.bak.<时间戳>`）。
+- 引擎是单文件纯 Python（`scripts/laws_sg_mcp.py`），只依赖 Python 3 标准库；
+  Windows 上把命令里的 `python3` 换成 `python` 即可，脚本用法不变。

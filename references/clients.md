@@ -187,9 +187,9 @@ codex mcp add laws-sg --url https://laws.sg/api/mcp --bearer-token-env-var LAWS_
 ## 任意其他客户端
 
 ```bash
-scripts/laws_sg_mcp.sh snippet --client json     # 通用 streamable-http 片段
-scripts/laws_sg_mcp.sh snippet --client all      # 全部客户端的片段一次打印
-scripts/laws_sg_mcp.sh configure --client generic --path <你的配置文件>
+python3 scripts/laws_sg_mcp.py snippet --client json     # 通用 streamable-http 片段
+python3 scripts/laws_sg_mcp.py snippet --client all      # 全部客户端的片段一次打印
+python3 scripts/laws_sg_mcp.py configure --client generic --path <你的配置文件>
 ```
 
 通用片段：

@@ -17,8 +17,9 @@ arguments:
 
 人工步骤：理想 0 步（已有可用 token），最坏 2 步（浏览器创建 token + 粘贴一次）。
 
-**所有脚本路径都相对本 SKILL.md 所在目录**，下文写作 `scripts/laws_sg_mcp.sh`。
-引擎只依赖 `bash` / `curl` / `python3`，不需要 jq、npm、pip。
+**所有脚本路径都相对本 SKILL.md 所在目录**，下文写作 `python3 scripts/laws_sg_mcp.py`。
+引擎是单文件纯 Python 脚本，只依赖 **Python 3 标准库**，不需要 curl、jq、npm、pip；
+Windows / macOS / Linux 通用（Windows 上把 `python3` 换成 `python`，脚本用法不变）。
 
 请求参数：`$action`（可选，如 `setup` / `verify` / `reissue` / `doctor`）；未给则按下面的判断树自行决定。
 
@@ -28,7 +29,7 @@ arguments:
 
 ```
 1. 环境里已有 LAWS_SG_MCP_TOKEN？
-   └─ 跑 scripts/laws_sg_mcp.sh verify
+   └─ 跑 python3 scripts/laws_sg_mcp.py verify
       ├─ 通过 → 跳到「只补配置」，几乎零人工
       └─ 被拒（401）→ 需要重新签发
 2. 用户愿意提供 laws.sg 的邮箱+密码吗？
@@ -45,7 +46,7 @@ arguments:
 一条命令跑完 doctor → 登录/注册 → 签发 token → 写 shell profile → 探测并写入客户端配置 → 真握手验证：
 
 ```bash
-scripts/laws_sg_mcp.sh setup
+python3 scripts/laws_sg_mcp.py setup
 ```
 
 `setup` 默认 `--client auto`：只写**探测到已安装**的客户端，不会为没装的工具乱建配置文件。
@@ -56,7 +57,7 @@ scripts/laws_sg_mcp.sh setup
 
 ```bash
 LAWS_SG_EMAIL=user@example.com LAWS_SG_PASSWORD="$(cat /path/to/pwfile)" \
-  scripts/laws_sg_mcp.sh setup
+  python3 scripts/laws_sg_mcp.py setup
 ```
 
 行为要点：
@@ -71,11 +72,11 @@ LAWS_SG_EMAIL=user@example.com LAWS_SG_PASSWORD="$(cat /path/to/pwfile)" \
 ### 指定 / 查看客户端
 
 ```bash
-scripts/laws_sg_mcp.sh clients                    # 只探测：装了哪些、配置在哪、是否已配置
-scripts/laws_sg_mcp.sh configure                  # 等价于 --client auto
-scripts/laws_sg_mcp.sh configure --client all     # 支持列表里的全都写
-scripts/laws_sg_mcp.sh configure --client cursor,vscode
-scripts/laws_sg_mcp.sh configure --client kimi-code --allow-tools   # kimi-code 专属：免审批放行
+python3 scripts/laws_sg_mcp.py clients                    # 只探测：装了哪些、配置在哪、是否已配置
+python3 scripts/laws_sg_mcp.py configure                  # 等价于 --client auto
+python3 scripts/laws_sg_mcp.py configure --client all     # 支持列表里的全都写
+python3 scripts/laws_sg_mcp.py configure --client cursor,vscode
+python3 scripts/laws_sg_mcp.py configure --client kimi-code --allow-tools   # kimi-code 专属：免审批放行
 ```
 
 可写入的客户端：`kimi-code` `claude` `codex` `cursor` `vscode` `generic`
@@ -88,29 +89,29 @@ scripts/laws_sg_mcp.sh configure --client kimi-code --allow-tools   # kimi-code 
 ### 只补配置（token 已就绪）
 
 ```bash
-scripts/laws_sg_mcp.sh verify                                   # 确认真的能握手
-scripts/laws_sg_mcp.sh env-install --token "$LAWS_SG_MCP_TOKEN"  # 写入 shell profile
-scripts/laws_sg_mcp.sh configure                                # 探测并写入客户端
+python3 scripts/laws_sg_mcp.py verify                                   # 确认真的能握手
+python3 scripts/laws_sg_mcp.py env-install --token "$LAWS_SG_MCP_TOKEN"  # 写入 shell profile（Windows：setx 用户环境变量，新开终端生效）
+python3 scripts/laws_sg_mcp.py configure                                # 探测并写入客户端
 ```
 
 ### 重新签发 / 吊销
 
 ```bash
-scripts/laws_sg_mcp.sh token list                    # 现有 token 的有效性与 id
-scripts/laws_sg_mcp.sh token revoke <id>
-scripts/laws_sg_mcp.sh token create --name "agent@new" [--expires 2027-12-31]
-scripts/laws_sg_mcp.sh token ensure --name "agent@$(hostname -s)"   # 幂等
+python3 scripts/laws_sg_mcp.py token list                    # 现有 token 的有效性与 id
+python3 scripts/laws_sg_mcp.py token revoke <id>
+python3 scripts/laws_sg_mcp.py token create --name "agent@new" [--expires 2027-12-31]
+python3 scripts/laws_sg_mcp.py token ensure --name "agent@$(hostname -s)"   # 幂等
 ```
 
 ### 分步执行（排障时更好定位）
 
 ```bash
-scripts/laws_sg_mcp.sh doctor
-scripts/laws_sg_mcp.sh login  --email E --password P     # 或 signup
-scripts/laws_sg_mcp.sh token ensure --name "agent@$(hostname -s)"
-scripts/laws_sg_mcp.sh env-install
-scripts/laws_sg_mcp.sh configure
-scripts/laws_sg_mcp.sh verify
+python3 scripts/laws_sg_mcp.py doctor
+python3 scripts/laws_sg_mcp.py login  --email E --password P     # 或 signup
+python3 scripts/laws_sg_mcp.py token ensure --name "agent@$(hostname -s)"
+python3 scripts/laws_sg_mcp.py env-install
+python3 scripts/laws_sg_mcp.py configure
+python3 scripts/laws_sg_mcp.py verify
 ```
 
 ---
@@ -118,7 +119,7 @@ scripts/laws_sg_mcp.sh verify
 ## B. 半自动降级路径
 
 ```bash
-scripts/laws_sg_mcp.sh manual --open     # 打印步骤并在浏览器打开 /account#mcp
+python3 scripts/laws_sg_mcp.py manual --open     # 打印步骤并在浏览器打开 /account#mcp
 ```
 
 请用户完成两件事：
@@ -130,9 +131,9 @@ scripts/laws_sg_mcp.sh manual --open     # 打印步骤并在浏览器打开 /ac
 拿到 token 后，验证与配置仍全自动：
 
 ```bash
-scripts/laws_sg_mcp.sh verify   laws_sg_xxxx
-scripts/laws_sg_mcp.sh env-install --token laws_sg_xxxx
-scripts/laws_sg_mcp.sh configure
+python3 scripts/laws_sg_mcp.py verify   laws_sg_xxxx
+python3 scripts/laws_sg_mcp.py env-install --token laws_sg_xxxx
+python3 scripts/laws_sg_mcp.py configure
 ```
 
 ---
