@@ -1,8 +1,8 @@
 ---
 name: laws-sg-mcp
 slug: laws-sg-mcp
-version: 1.0.1
-displayName: laws.sg 接入助手
+version: 1.0.2
+displayName: laws.sg MCP工具接入助手
 description: 配置 laws.sg（新加坡法律法规与判例库）官方 MCP 服务——自动登录或注册账号、签发个人 bearer token、探测并写入本机 MCP 客户端配置、做真握手验证；自动路径失败时降级为浏览器引导
 type: prompt
 whenToUse: 用户想接入 laws.sg MCP、已有配置连不上、token 失效需重签，或需要让 agent 检索新加坡法律（Act / Bill / 附属立法 / 判决 / Hansard）并给出可核对的条文引用时
